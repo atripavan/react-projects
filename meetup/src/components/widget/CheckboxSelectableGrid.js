@@ -27,7 +27,9 @@ function CheckboxSelectableGrid(props) {
   };
 
   return (
-    <div className={classes.popupbox}>
+    
+    <div className={classes.popupbox}>      
+      <b>Select users</b>
       <div className={classes.box}>
         <span className={classes.closeicon} onClick={props.handleClose}>x</span>
         <table>
