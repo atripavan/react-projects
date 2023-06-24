@@ -6,6 +6,7 @@ import { useContext } from "react";
 import { useState } from "react";
 import Popup from "../ui/Popup";
 import CheckboxSelectableGrid from "../widget/CheckboxSelectableGrid";
+import { useEffect } from "react";
 
 function NewMeetupForm(props) {
   const titleInputRef = useRef();
@@ -54,6 +55,7 @@ function NewMeetupForm(props) {
       });
   }
 
+  let userIdsArr = [];
   function submitHandler(event) {
     event.preventDefault();
 
@@ -70,7 +72,8 @@ function NewMeetupForm(props) {
         ownerEmail: email,
         address: enteredAdrs,
         description: entereddesc,
-        userId : usrId
+        userId : usrId,
+        meetupUsers : userIdsArr
     };
 
     props.onAddMeetup(meetupData);
@@ -81,6 +84,11 @@ function NewMeetupForm(props) {
     {key: 'userId', name: 'User ID'},
     {key: 'userName', name: 'Name'}
   ];
+
+  function handleGridSubmit(gridData){
+    userIdsArr = gridData.filter(user => user.selected).map((user) => user.userId);
+    setIsOpen(!isOpen);
+  }
 
 
   return (
@@ -118,14 +126,13 @@ function NewMeetupForm(props) {
         <div className={classes.actions}>
           <button>Add Meetup</button>
         </div>
-        { isOpen && <Popup
-          content={<>
-            <b>Select users</b>
-            <CheckboxSelectableGrid cols={columns} rows={loadedUsers}></CheckboxSelectableGrid>
-            <button>Submit</button>
-          </>}
-          handleClose={togglePopup}
-      />}
+        { isOpen && 
+            <CheckboxSelectableGrid 
+                cols={columns} 
+                rows={loadedUsers} 
+                handleGridSubmit={handleGridSubmit} 
+                handleClose={togglePopup}/>
+        }
       </form>
     </Card>
   );
